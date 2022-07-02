@@ -1,17 +1,16 @@
 import * as React from 'react'
-import logo from './logo.svg'
 import './App.css'
 import {GoogleMap, useJsApiLoader} from "@react-google-maps/api";
 
 function App() {
-    const [map, setMap] = React.useState(null);
+    const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: 'AIzaSyChtD7AbqlxkkUm-Zc_ly8VdjpO0Vcz3Ss'
     });
 
-    const onLoad = React.useCallback((map) => {
+    const onLoad = React.useCallback((map: google.maps.Map) => {
         setMap(map)
     }, []);
 
