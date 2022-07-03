@@ -9,6 +9,6 @@ app.get('*', (req, res) => {
     res.render('index.html');
 });
 
-app.listen(80, () => {
-    console.log('Server listening at port 80');
+app.listen(3000, () => {
+    console.log('Server listening at port 3000');
 });
