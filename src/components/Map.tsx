@@ -1,36 +1,56 @@
-import * as React from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import * as React from 'react';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { locations, TripLocation } from '../Data';
 
-const Map = () => {
-    const [map, setMap] = React.useState<google.maps.Map | null>(null);
+const position = {
+  lat: 51.49581846795866,
+  lng: -0.14527781537217113
+};
 
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: 'AIzaSyChtD7AbqlxkkUm-Zc_ly8VdjpO0Vcz3Ss'
-    });
+type MapProps = {
+  focusedLocation: TripLocation | null
+};
 
-    const onLoad = React.useCallback((map: google.maps.Map) => {
-        setMap(map)
-    }, []);
+const Map = (props: MapProps) => {
+  const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
-    const onUnmount = React.useCallback(() => {
-        setMap(null)
-    }, []);
+  React.useEffect(() => {
+    if (props.focusedLocation && map) {
+      map.panTo(props.focusedLocation.position);
+    }
+  }, [map, props.focusedLocation]);
 
-    return isLoaded ? (
-        <GoogleMap
-            center={{
-                lat: 41.6535,
-                lng: -93.709
-            }}
-            mapContainerStyle={{ width: '800px', height: '600px' }}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-            zoom={11}
-        >
+  const {isLoaded} = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyChtD7AbqlxkkUm-Zc_ly8VdjpO0Vcz3Ss',
+    libraries: ['places', 'drawing', 'geometry']
+  });
 
-        </GoogleMap>
-    ) : <div/>;
+  const onLoad = React.useCallback((map: google.maps.Map) => {
+    setMap(map)
+  }, []);
+
+  const onUnmount = React.useCallback(() => {
+    setMap(null)
+  }, []);
+
+  return isLoaded ? (
+    <GoogleMap
+      center={position}
+      mapContainerStyle={{width: '800px', height: '600px'}}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
+      zoom={13}
+    >
+        {locations.map((location) => (
+          <Marker
+            key={location.label}
+            options={{ map }}
+            position={location.position}
+          />
+        ))}
+    </GoogleMap>
+  ) : <div/>;
 };
 
 export default Map;
