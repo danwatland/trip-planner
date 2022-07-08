@@ -5,11 +5,17 @@ import Map from "./components/Map";
 import DestinationList from './components/DestinationList';
 import { TripLocation } from './Data';
 import Box from '@mui/material/Box';
+import { useLocationStore } from './state/LocationStore';
 
 function App() {
+  const getSavedLocations = useLocationStore((state) => state.getSavedLocations);
   const [hoveredLocation, setHoveredLocation] = React.useState<TripLocation | null>(null);
 
   const handleLocationChange = (location: TripLocation | null) => { setHoveredLocation(location); };
+
+  React.useEffect(() => {
+    getSavedLocations();
+  }, []);
 
   return (
     <div className="App">

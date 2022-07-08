@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import { locations, TripLocation } from '../Data';
+import { TripLocation } from '../Data';
+import { useLocationStore } from '../state/LocationStore';
 
 const position = {
   lat: 51.49581846795866,
@@ -12,11 +13,12 @@ type MapProps = {
 };
 
 const Map = (props: MapProps) => {
+  const locations = useLocationStore((state) => state.locations);
   const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
   React.useEffect(() => {
     if (props.focusedLocation && map) {
-      map.panTo(props.focusedLocation.position);
+      map.panTo({ lat: props.focusedLocation.lat, lng: props.focusedLocation.lng });
     }
   }, [map, props.focusedLocation]);
 
@@ -40,13 +42,14 @@ const Map = (props: MapProps) => {
       mapContainerStyle={{width: '800px', height: '600px'}}
       onLoad={onLoad}
       onUnmount={onUnmount}
+      options={{ scaleControl: true }}
       zoom={13}
     >
         {locations.map((location) => (
           <Marker
             key={location.label}
             options={{ map }}
-            position={location.position}
+            position={{ lat: location.lat, lng: location.lng }}
           />
         ))}
     </GoogleMap>
