@@ -1,9 +1,7 @@
 import * as React from 'react'
 import './App.css'
-import {GoogleMap, useJsApiLoader} from "@react-google-maps/api";
 import Map from "./components/Map";
 import DestinationList from './components/DestinationList';
-import { TripLocation } from './Data';
 import Box from '@mui/material/Box';
 import { useLocationStore } from './state/LocationStore';
 

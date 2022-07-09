@@ -1,5 +1,4 @@
 import create from 'zustand';
-import { TripLocation } from '../Data';
 import { getSavedLocations } from '../services/TripPlannerApiService';
 
 type LocationStore = {

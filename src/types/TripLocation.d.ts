@@ -1,4 +1,4 @@
-export type TripLocation = {
+type TripLocation = {
   id: number,
   endDate?: Date,
   startDate?: Date,
