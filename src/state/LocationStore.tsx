@@ -1,9 +1,10 @@
 import create from 'zustand';
-import { getSavedLocations } from '../services/TripPlannerApiService';
+import { getSavedLocations, updateLocation } from '../services/TripPlannerApiService';
 
 type LocationStore = {
   locations: TripLocation[],
   getSavedLocations: () => void,
+  updateLocation: (location: TripLocation) => void
 };
 
 const useLocationStore = create<LocationStore>((set, get) => ({
@@ -12,6 +13,9 @@ const useLocationStore = create<LocationStore>((set, get) => ({
     const locations = await getSavedLocations();
 
     set(() => ({ locations }));
+  },
+  updateLocation: async (location) => {
+    await updateLocation(location);
   }
 }));
 

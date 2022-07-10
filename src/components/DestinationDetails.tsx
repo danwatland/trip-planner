@@ -1,26 +1,56 @@
 import * as React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import { useLocationStore } from '../state/LocationStore';
 
 type DestinationDetailsProps = {
-  location: TripLocation | null
+  location: TripLocation,
+  handleClose: () => void
 };
 
 const DestinationDetails = (props: DestinationDetailsProps): React.ReactElement => {
-  const { location } = props;
+  const updateLocation = useLocationStore((state) => state.updateLocation);
+  const [location, setLocation] = React.useState<TripLocation>({} as TripLocation);
 
-  const renderLabelAndValue = (label: string, value?: string | Date): React.ReactElement => (
-    <Box display="flex" flexDirection="row">
-      <Typography variant="body1" fontWeight="bold">{label}</Typography>
-      <Typography variant="body1">{value instanceof Date ? value.toLocaleDateString() : value}</Typography>
+  React.useEffect(() => {
+    setLocation(props.location);
+  }, [props.location]);
+
+  const handleSave = async () => {
+    await updateLocation(location);
+    props.handleClose();
+  };
+
+  const renderDate = (label: string, field: keyof TripLocation): React.ReactElement => (
+    <Box display="flex" flexDirection="column" sx={{ mt: 2 }}>
+      <DateTimePicker
+        value={location[field] || ''}
+        label={label}
+        onChange={(newValue) => {
+          setLocation({
+            ...location,
+            [field]: newValue
+          })
+        }}
+        renderInput={(props) => <TextField {...props} />}
+      />
     </Box>
   );
 
   return location ? (
-    <Box sx={{ px: 3, pb: 2 }}>
-      {renderLabelAndValue('Label', location.label)}
-      {renderLabelAndValue('Start Time', location.startDate)}
-      {renderLabelAndValue('End Time', location.endDate)}
-    </Box>
+    <>
+      <DialogTitle>{location.label}</DialogTitle>
+      <DialogContent>
+        <Box sx={{ px: 3, pb: 2 }}>
+          {renderDate('Start Date', 'startDate')}
+          {renderDate('End Date', 'endDate')}
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.handleClose}>Cancel</Button>
+        <Button variant='contained' onClick={handleSave}>Save</Button>
+      </DialogActions>
+    </>
   ) : <div/>;
 };
 

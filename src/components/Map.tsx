@@ -2,6 +2,7 @@ import * as React from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { useLocationStore } from '../state/LocationStore';
 
+const libraries: ('places'|'drawing'|'geometry')[] = ['places', 'drawing', 'geometry']
 const position = {
   lat: 51.49581846795866,
   lng: -0.14527781537217113
@@ -24,7 +25,7 @@ const Map = (props: MapProps) => {
   const {isLoaded} = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: 'AIzaSyChtD7AbqlxkkUm-Zc_ly8VdjpO0Vcz3Ss',
-    libraries: ['places', 'drawing', 'geometry']
+    libraries
   });
 
   const onLoad = React.useCallback((map: google.maps.Map) => {

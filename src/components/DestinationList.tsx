@@ -26,10 +26,12 @@ const DestinationList = (props: DestinationListProps): React.ReactElement => {
       <List>
         {locations.map(renderDestination)}
       </List>
-      <Dialog open={Boolean(selectedLocation)} onClose={() => setSelectedLocation(null)} maxWidth='xs' fullWidth={true}>
-        <DialogTitle>Destination Details</DialogTitle>
-        <DestinationDetails location={selectedLocation} />
-      </Dialog>
+      {selectedLocation &&
+          <Dialog open={Boolean(selectedLocation)} onClose={() => setSelectedLocation(null)} maxWidth='xs'
+                  fullWidth={true}>
+              <DestinationDetails location={selectedLocation} handleClose={() => setSelectedLocation(null)}/>
+          </Dialog>
+      }
     </Box>
   );
 };
