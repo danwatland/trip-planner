@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/api';
 import { useLocationStore } from '../state/LocationStore';
+import { useMapStore } from '../state/MapStore';
 
 const libraries: ('places'|'drawing'|'geometry')[] = ['places', 'drawing', 'geometry']
 const position = {
@@ -13,8 +14,9 @@ type MapProps = {
 };
 
 const Map = (props: MapProps) => {
-  const [locations, locationFilter] = useLocationStore((state) => [state.locations, state.locationFilter]);
-  const [map, setMap] = React.useState<google.maps.Map | null>(null);
+  const { locations, locationFilter } = useLocationStore();
+  const { map, setMap, directions } = useMapStore();
+  const [path, setPath] = React.useState<google.maps.Polyline | null>(null);
 
   React.useEffect(() => {
     if (props.focusedLocation && map) {
@@ -22,36 +24,40 @@ const Map = (props: MapProps) => {
     }
   }, [map, props.focusedLocation]);
 
-  const {isLoaded} = useJsApiLoader({
+  React.useEffect(() => {
+    if (path && directions.length === 0) {
+      path.setMap(null);
+    }
+  }, [directions]);
+
+  const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: 'AIzaSyChtD7AbqlxkkUm-Zc_ly8VdjpO0Vcz3Ss',
     libraries
   });
 
-  const onLoad = React.useCallback((map: google.maps.Map) => {
-    setMap(map)
-  }, []);
-
-  const onUnmount = React.useCallback(() => {
-    setMap(null)
-  }, []);
-
   return isLoaded ? (
     <GoogleMap
       center={position}
-      mapContainerStyle={{width: '800px', height: '600px'}}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
+      mapContainerStyle={{ width: '800px', height: '600px' }}
+      onLoad={(map) => setMap(map)}
+      onUnmount={() => setMap(null)}
       options={{ scaleControl: true }}
       zoom={13}
     >
-        {locations.filter(locationFilter).map((location) => (
-          <Marker
-            key={location.label}
-            options={{ map }}
-            position={{ lat: location.lat, lng: location.lng }}
-          />
-        ))}
+      {locations.filter(locationFilter).map((location) => (
+        <Marker
+          key={location.label}
+          options={{ map }}
+          position={{ lat: location.lat, lng: location.lng }}
+        />
+      ))}
+      <Polyline
+        options={{ map, strokeColor: '#0000bb' }}
+        path={directions.flatMap((leg) => leg.routes[0].overview_path).slice(0, -1)}
+        onLoad={(polyline) => setPath(polyline)}
+        onUnmount={() => setPath(null)}
+      />
     </GoogleMap>
   ) : <div/>;
 };
