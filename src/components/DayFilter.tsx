@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useLocationStore } from '../state/LocationStore';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import getDay from 'date-fns/getDay';
-import { parseISO } from 'date-fns';
+import parseISO from 'date-fns/parseISO';
 
 const DayFilter = () => {
   const setLocationFilter = useLocationStore((state) => state.setLocationFilter);
@@ -22,7 +22,7 @@ const DayFilter = () => {
   };
 
   return (
-    <ToggleButtonGroup orientation="vertical" value={days} onChange={handleChange} sx={{ ml: 2 }}>
+    <ToggleButtonGroup value={days} onChange={handleChange} sx={{ height: 'fit-content' }}>
       <ToggleButton value={0}>Sun</ToggleButton>
       <ToggleButton value={1}>Mon</ToggleButton>
       <ToggleButton value={2}>Tue</ToggleButton>

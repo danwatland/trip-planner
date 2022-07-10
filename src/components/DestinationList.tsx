@@ -22,7 +22,7 @@ const DestinationList = (props: DestinationListProps): React.ReactElement => {
   );
 
   return (
-    <Box sx={{ ml: 2 }} component={Paper}>
+    <Box sx={{ width: 250 }} component={Paper}>
       <List>
         {locations.filter(locationFilter).map(renderDestination)}
       </List>

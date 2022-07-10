@@ -5,6 +5,7 @@ import DestinationList from './components/DestinationList';
 import Box from '@mui/material/Box';
 import { useLocationStore } from './state/LocationStore';
 import DayFilter from './components/DayFilter';
+import { Typography } from '@mui/material';
 
 function App() {
   const getSavedLocations = useLocationStore((state) => state.getSavedLocations);
@@ -18,11 +19,18 @@ function App() {
 
   return (
     <div className="App">
-      <Box display="flex" flexDirection="row">
-        <Map focusedLocation={hoveredLocation} />
-        <DestinationList onHover={handleLocationChange} />
-        <DayFilter />
-      </Box>
+      <div style={{ display: 'inline-block' }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h3">Trip Planner</Typography>
+          <DayFilter />
+        </Box>
+        <div>
+          <Box display="flex" gap={2}>
+            <DestinationList onHover={handleLocationChange} />
+            <Map focusedLocation={hoveredLocation} />
+          </Box>
+        </div>
+      </div>
     </div>
   )
 }
