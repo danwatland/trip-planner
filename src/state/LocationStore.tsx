@@ -3,12 +3,18 @@ import { getSavedLocations, updateLocation } from '../services/TripPlannerApiSer
 
 type LocationStore = {
   locations: TripLocation[],
+  locationFilter: (location: TripLocation) => boolean,
+  setLocationFilter: (locationFilter: (location: TripLocation) => boolean) => void,
   getSavedLocations: () => void,
   updateLocation: (location: TripLocation) => void
 };
 
 const useLocationStore = create<LocationStore>((set, get) => ({
   locations: [],
+  locationFilter: () => true,
+  setLocationFilter: (locationFilter) => {
+    set(() => ({ locationFilter }));
+  },
   getSavedLocations: async () => {
     const locations = await getSavedLocations();
 

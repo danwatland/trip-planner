@@ -1,3 +1,7 @@
+.App {
+  padding: 16px;
+}
+
 .destination-list-entry:hover {
   background-color: #f4f4f4;
 }

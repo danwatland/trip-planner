@@ -13,7 +13,7 @@ type MapProps = {
 };
 
 const Map = (props: MapProps) => {
-  const locations = useLocationStore((state) => state.locations);
+  const [locations, locationFilter] = useLocationStore((state) => [state.locations, state.locationFilter]);
   const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
   React.useEffect(() => {
@@ -45,7 +45,7 @@ const Map = (props: MapProps) => {
       options={{ scaleControl: true }}
       zoom={13}
     >
-        {locations.map((location) => (
+        {locations.filter(locationFilter).map((location) => (
           <Marker
             key={location.label}
             options={{ map }}

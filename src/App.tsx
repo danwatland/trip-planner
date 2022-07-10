@@ -4,6 +4,7 @@ import Map from "./components/Map";
 import DestinationList from './components/DestinationList';
 import Box from '@mui/material/Box';
 import { useLocationStore } from './state/LocationStore';
+import DayFilter from './components/DayFilter';
 
 function App() {
   const getSavedLocations = useLocationStore((state) => state.getSavedLocations);
@@ -20,6 +21,7 @@ function App() {
       <Box display="flex" flexDirection="row">
         <Map focusedLocation={hoveredLocation} />
         <DestinationList onHover={handleLocationChange} />
+        <DayFilter />
       </Box>
     </div>
   )

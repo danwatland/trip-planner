@@ -12,7 +12,7 @@ type DestinationListProps = {
 };
 
 const DestinationList = (props: DestinationListProps): React.ReactElement => {
-  const locations = useLocationStore((state) => state.locations);
+  const [locations, locationFilter] = useLocationStore((state) => [state.locations, state.locationFilter]);
   const [selectedLocation, setSelectedLocation] = React.useState<TripLocation | null>(null);
 
   const renderDestination = (location: TripLocation): React.ReactElement => (
@@ -24,7 +24,7 @@ const DestinationList = (props: DestinationListProps): React.ReactElement => {
   return (
     <Box sx={{ ml: 2 }} component={Paper}>
       <List>
-        {locations.map(renderDestination)}
+        {locations.filter(locationFilter).map(renderDestination)}
       </List>
       {selectedLocation &&
           <Dialog open={Boolean(selectedLocation)} onClose={() => setSelectedLocation(null)} maxWidth='xs'
