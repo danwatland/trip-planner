@@ -1,52 +1,36 @@
 import * as React from 'react';
 import { useLocationStore } from '../state/LocationStore';
 import { useMapStore } from '../state/MapStore';
-import { Button, List, ListItem, Paper, Typography } from '@mui/material';
+import { Button, List, ListItem, Paper, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import parseISO from 'date-fns/parseISO';
+import isBefore from 'date-fns/isBefore';
 import Box from '@mui/material/Box';
 
 const DayInfo = (): React.ReactElement => {
   const { locations, locationFilter } = useLocationStore();
   const { directions, getDirections } = useMapStore();
-  const [selectedStep, setSelectedStep] = React.useState<number | null>(null);
+  const [selectedStep, setSelectedStep] = React.useState<number>(0);
 
   React.useEffect(() => {
-    getDirections(locations.filter(locationFilter).sort((a, b) => a.startDate > b.startDate ? 1 : -1));
+    getDirections(locations
+      .filter(locationFilter)
+      .filter((loc) => Boolean(loc.startDate))
+      .sort((a, b) => isBefore(parseISO(a.startDate!.toString()), parseISO(b.startDate!.toString())) ? 1 : -1)
+    );
   }, [locationFilter]);
 
   const getTotalDistance = (): string => {
-    const totalMeters = directions.reduce((total, routeLeg) => total + routeLeg.routes[0].legs[0].distance?.value, 0);
+    const totalMeters = directions!.routes[0].legs.reduce((total, routeLeg) => total + routeLeg.distance!.value, 0);
 
     return totalMeters > 1000 ? `${totalMeters / 1000} km` : `${totalMeters} m`;
   };
 
-  const renderStepSelector = (): React.ReactElement => {
-    return (
-      <Box>
-        <Button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-               className="bi bi-chevron-left" viewBox="0 0 16 16">
-            <path fillRule="evenodd"
-                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-          </svg>
-        </Button>
-        {directions.map((_, i) => <Button>{i + 1}</Button>)}
-        <Button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-               className="bi bi-chevron-right" viewBox="0 0 16 16">
-            <path fillRule="evenodd"
-                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-          </svg>
-        </Button>
-      </Box>
-    );
-  };
-
   const renderWalkingSteps = (): React.ReactElement => {
-    const steps = directions.flatMap((routeLeg) => routeLeg.routes[0].legs[0].steps);
+    const steps = directions?.routes[0].legs[selectedStep].steps;
 
     return (
       <List>
-        {steps.map((step, i) => (
+        {steps?.map((step, i) => (
           <ListItem key={step.instructions + i}>
             <span dangerouslySetInnerHTML={{ __html: step.instructions }} />
           </ListItem>
@@ -55,13 +39,41 @@ const DayInfo = (): React.ReactElement => {
     );
   };
 
-  return directions.length > 0 ? (
-    <Paper sx={{ alignSelf: 'center', ml: 2, p: 2 }}>
+  const renderStepSelector = (): React.ReactElement => (
+    <Box display="flex" flexDirection="column">
+      <Typography variant="subtitle1">Steps</Typography>
+      <ToggleButtonGroup exclusive onChange={(_, newValue) => setSelectedStep(Number(newValue))} value={selectedStep}>
+        {directions?.routes[0].legs.map((leg, i) => (
+          <ToggleButton key={leg.start_address} value={i}>
+            {i + 1}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+    </Box>
+  );
+
+  const renderStepInfo = (): React.ReactElement => {
+    const leg = directions!.routes[0].legs[selectedStep];
+    const startLocation = locations.find((loc) => Math.abs(loc.lat - leg.start_location.lat()) < 0.001 && Math.abs(loc.lng - leg.start_location.lng()) < 0.001)!;
+    const endLocation = locations.find((loc) => Math.abs(loc.lat - leg.end_location.lat()) < 0.001 && Math.abs(loc.lng - leg.end_location.lng()) < 0.001)!;
+
+    return (
+      <Box>
+        <Typography variant="body1">{`Start Location: ${startLocation.label}`}</Typography>
+        <Typography variant="body1">{`End Location: ${endLocation.label}`}</Typography>
+        <Typography variant="body1">{`Step Distance: ${leg?.distance?.value} m`}</Typography>
+      </Box>
+    );
+  };
+
+  return directions ? (
+    <Paper sx={{ alignSelf: 'center', ml: 2, p: 2, height: 500, overflowY: 'auto' }}>
       <Typography variant="body1">Total Distance</Typography>
       <Typography variant="body2">
-        {directions.length > 0 && getTotalDistance()}
+        {getTotalDistance()}
       </Typography>
       {renderStepSelector()}
+      {renderStepInfo()}
       {renderWalkingSteps()}
     </Paper>
   ) : <div/>;

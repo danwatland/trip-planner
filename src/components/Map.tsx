@@ -25,7 +25,7 @@ const Map = (props: MapProps) => {
   }, [map, props.focusedLocation]);
 
   React.useEffect(() => {
-    if (path && directions.length === 0) {
+    if (path && !directions) {
       path.setMap(null);
     }
   }, [directions]);
@@ -54,7 +54,7 @@ const Map = (props: MapProps) => {
       ))}
       <Polyline
         options={{ map, strokeColor: '#0000bb' }}
-        path={directions.flatMap((leg) => leg.routes[0].overview_path).slice(0, -1)}
+        path={directions?.routes[0].overview_path}
         onLoad={(polyline) => setPath(polyline)}
         onUnmount={() => setPath(null)}
       />
