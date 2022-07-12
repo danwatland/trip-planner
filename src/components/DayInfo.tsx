@@ -4,6 +4,7 @@ import { useMapStore } from '../state/MapStore';
 import { Button, List, ListItem, Paper, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import parseISO from 'date-fns/parseISO';
 import isBefore from 'date-fns/isBefore';
+import format from 'date-fns/format';
 import Box from '@mui/material/Box';
 
 const DayInfo = (): React.ReactElement => {
@@ -40,8 +41,8 @@ const DayInfo = (): React.ReactElement => {
   };
 
   const renderStepSelector = (): React.ReactElement => (
-    <Box display="flex" flexDirection="column">
-      <Typography variant="subtitle1">Steps</Typography>
+    <Box display="flex" flexDirection="column" className="step-selector">
+      <Typography variant="subtitle1" fontWeight="bold">Steps</Typography>
       <ToggleButtonGroup exclusive onChange={(_, newValue) => setSelectedStep(Number(newValue))} value={selectedStep}>
         {directions?.routes[0].legs.map((leg, i) => (
           <ToggleButton key={leg.start_address} value={i}>
@@ -58,24 +59,26 @@ const DayInfo = (): React.ReactElement => {
     const endLocation = locations.find((loc) => Math.abs(loc.lat - leg.end_location.lat()) < 0.001 && Math.abs(loc.lng - leg.end_location.lng()) < 0.001)!;
 
     return (
-      <Box>
-        <Typography variant="body1">{`Start Location: ${startLocation.label}`}</Typography>
-        <Typography variant="body1">{`End Location: ${endLocation.label}`}</Typography>
-        <Typography variant="body1">{`Step Distance: ${leg?.distance?.value} m`}</Typography>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Typography variant="body1"><em>{startLocation.label}</em> to <em>{endLocation.label}</em></Typography>
+        <Typography variant="body1">{`${format(parseISO(startLocation.startDate!.toString()), 'MM/dd/yy h:mm a')} - ${format(parseISO(startLocation.endDate!.toString()), 'MM/dd/yy h:mm a')}`}</Typography>
+        <Typography variant="body1">{`${leg?.distance?.value} m`}</Typography>
       </Box>
     );
   };
 
   return directions ? (
-    <Paper sx={{ alignSelf: 'center', ml: 2, p: 2, height: 500, overflowY: 'auto' }}>
-      <Typography variant="body1">Total Distance</Typography>
-      <Typography variant="body2">
-        {getTotalDistance()}
-      </Typography>
+    <Box display="flex" flexDirection="column" gap={2} sx={{ alignSelf: 'center', ml: 2, p: 2, height: 500, overflowY: 'auto' }} component={Paper}>
+      <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <Typography variant="body1">Total Distance</Typography>
+        <Typography variant="body2">
+          {getTotalDistance()}
+        </Typography>
+      </Box>
       {renderStepSelector()}
       {renderStepInfo()}
       {renderWalkingSteps()}
-    </Paper>
+    </Box>
   ) : <div/>;
 };
 

@@ -1,7 +1,32 @@
+body {
+  background-color: #fef4eb;
+}
+
 .App {
   padding: 16px;
 }
 
 .destination-list-entry:hover {
   background-color: #f4f4f4;
+}
+
+.step-selector {
+  align-items: center;
+}
+
+.step-selector > .MuiToggleButtonGroup-root {
+  gap: 8px;
+}
+
+.step-selector > .MuiToggleButtonGroup-root > button,
+.step-selector > .MuiToggleButtonGroup-root > button:not(:first-of-type),
+.step-selector > .MuiToggleButtonGroup-root > button:first-of-type {
+  border-radius: 50%;
+  border: none;
+  padding: 6px 12px;
+}
+
+.step-selector > .MuiToggleButtonGroup-root > button.Mui-selected {
+  background-color: #34b;
+  color: #efc;
 }

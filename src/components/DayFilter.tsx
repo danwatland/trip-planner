@@ -22,7 +22,7 @@ const DayFilter = () => {
   };
 
   return (
-    <ToggleButtonGroup value={days} onChange={handleChange} sx={{ height: 'fit-content' }}>
+    <ToggleButtonGroup value={days} onChange={handleChange} sx={{ height: 'fit-content', 'button': { backgroundColor: 'white' }, '.Mui-selected': { backgroundColor: '#34b', color: '#efc' } }}>
       <ToggleButton value={0}>Sun</ToggleButton>
       <ToggleButton value={1}>Mon</ToggleButton>
       <ToggleButton value={2}>Tue</ToggleButton>
