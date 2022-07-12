@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import { Dialog, DialogTitle, Paper } from '@mui/material';
+import { Button, Dialog, DialogTitle, Paper } from '@mui/material';
 import { useLocationStore } from '../state/LocationStore';
 import DestinationDetails from './DestinationDetails';
 
@@ -22,8 +22,11 @@ const DestinationList = (props: DestinationListProps): React.ReactElement => {
   );
 
   return (
-    <Box sx={{ width: 250 }} component={Paper}>
-      <List>
+    <Box display="flex" flexDirection="column" sx={{ position: 'relative', width: 250 }} component={Paper}>
+      <Button sx={{ alignSelf: 'end', pb: 0, width: 50 }} onClick={() => setSelectedLocation({} as TripLocation)}>
+        + Add
+      </Button>
+      <List sx={{ overflowY: 'auto' }}>
         {locations.filter(locationFilter).map(renderDestination)}
       </List>
       {selectedLocation &&

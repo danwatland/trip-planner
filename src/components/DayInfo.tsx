@@ -68,7 +68,7 @@ const DayInfo = (): React.ReactElement => {
   };
 
   return directions ? (
-    <Box display="flex" flexDirection="column" gap={2} sx={{ alignSelf: 'center', ml: 2, p: 2, height: 500, overflowY: 'auto' }} component={Paper}>
+    <Box display="flex" flexDirection="column" gap={2} sx={{ alignSelf: 'center', ml: 2, p: 2, height: 500, width: 350, overflowY: 'auto' }} component={Paper}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="body1">Total Distance</Typography>
         <Typography variant="body2">
