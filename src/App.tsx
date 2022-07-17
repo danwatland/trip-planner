@@ -23,10 +23,11 @@ function App() {
     <div className="App">
       <Box display="flex" flexDirection="row">
         <div style={{ display: 'inline-block' }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
             <Typography variant="h3">Trip Planner</Typography>
             <DayFilter />
           </Box>
+          <div className="trip-planner-divider" />
           <div>
             <Box display="flex" gap={2}>
               <DestinationList onHover={handleLocationChange} />
