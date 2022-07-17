@@ -9,9 +9,11 @@ type LocationStore = {
   updateLocation: (location: TripLocation) => void
 };
 
+const DEFAULT_LOCATION_FILTER = () => true;
+
 const useLocationStore = create<LocationStore>((set, get) => ({
   locations: [],
-  locationFilter: () => true,
+  locationFilter: DEFAULT_LOCATION_FILTER,
   setLocationFilter: (locationFilter) => {
     set(() => ({ locationFilter }));
   },
@@ -26,5 +28,6 @@ const useLocationStore = create<LocationStore>((set, get) => ({
 }));
 
 export {
-  useLocationStore
+  useLocationStore,
+  DEFAULT_LOCATION_FILTER,
 };

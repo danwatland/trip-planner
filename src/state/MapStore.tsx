@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { useLocationStore } from './LocationStore';
+import { DEFAULT_LOCATION_FILTER, useLocationStore } from './LocationStore';
 
 type MapStore = {
   map: google.maps.Map | null,
@@ -15,7 +15,7 @@ const useMapStore = create<MapStore>((set, get) => ({
     set({ map })
   },
   getDirections: async (locations) => {
-    if (locations.length <= 1 || locations.length === useLocationStore.getState().locations.length) {
+    if (locations.length <= 1 || useLocationStore.getState().locationFilter === DEFAULT_LOCATION_FILTER) {
       set({ directions: null });
       return;
     }

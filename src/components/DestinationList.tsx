@@ -22,7 +22,7 @@ const DestinationList = (props: DestinationListProps): React.ReactElement => {
   );
 
   return (
-    <Box display="flex" flexDirection="column" sx={{ position: 'relative', width: 250 }} component={Paper}>
+    <Box display="flex" flexDirection="column" sx={{ position: 'relative', width: 250, height: 600 }} component={Paper}>
       <Button sx={{ alignSelf: 'end', pb: 0, width: 50 }} onClick={() => setSelectedLocation({} as TripLocation)}>
         + Add
       </Button>

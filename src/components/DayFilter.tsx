@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLocationStore } from '../state/LocationStore';
+import { DEFAULT_LOCATION_FILTER, useLocationStore } from '../state/LocationStore';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import getDay from 'date-fns/getDay';
 import parseISO from 'date-fns/parseISO';
@@ -12,7 +12,7 @@ const DayFilter = () => {
     setDays(newDays);
 
     if (newDays.length === 0) {
-      setLocationFilter(() => true);
+      setLocationFilter(DEFAULT_LOCATION_FILTER);
     } else {
       setLocationFilter((location) =>
         Boolean(location.startDate && newDays.includes(getDay(parseISO(location.startDate.toString())))) ||
