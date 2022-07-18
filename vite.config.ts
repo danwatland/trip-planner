@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     define: {
+      GOOGLE_MAPS_API_KEY: env.GOOGLE_MAPS_API_KEY,
       TRIP_PLANNER_API: env.TRIP_PLANNER_API
     },
     plugins: [react()],

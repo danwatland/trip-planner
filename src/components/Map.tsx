@@ -3,6 +3,8 @@ import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/
 import { useLocationStore } from '../state/LocationStore';
 import { useMapStore } from '../state/MapStore';
 
+declare const GOOGLE_MAPS_API_KEY: string;
+
 const libraries: ('places'|'drawing'|'geometry')[] = ['places', 'drawing', 'geometry']
 const position = {
   lat: 51.49581846795866,
@@ -32,7 +34,7 @@ const Map = (props: MapProps) => {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyChtD7AbqlxkkUm-Zc_ly8VdjpO0Vcz3Ss',
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries
   });
 
